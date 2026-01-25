@@ -41,7 +41,6 @@ export const syncUser = asyncHandler(async (req, res) => {
   res.status(201).json({ user, message: "User created successfully" });
 });
 
-
 export const getCurrentUser = asyncHandler(async (req, res) => {
   const { userId } = getAuth(req);
   const user = await User.findOne({ clerkId: userId });
@@ -53,14 +52,16 @@ export const followUser = asyncHandler(async (req, res) => {
   const { userId } = getAuth(req);
   const { targetUserId } = req.params;
 
-  if (userId === targetUserId)
+  if (userId === targetUserId) {
     return res.status(400).json({ error: "You cannot follow yourself" });
+  }
 
   const currentUser = await User.findOne({ clerkId: userId });
   const targetUser = await User.findById(targetUserId);
 
-  if (!currentUser || !targetUser)
+  if (!currentUser || !targetUser) {
     return res.status(404).json({ error: "User not found" });
+  }
 
   const isFollowing = currentUser.following.includes(targetUserId);
 
